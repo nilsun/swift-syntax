@@ -1,4 +1,4 @@
-// swift-tools-version:5.1
+// swift-tools-version:5.3
 
 import PackageDescription
 import Foundation
@@ -15,6 +15,14 @@ let package = Package(
     // Also see targets added below
   ]
 )
+
+let parserLibraryTarget: [Target] = [.binaryTarget(
+  name: "_InternalSwiftSyntaxParser",
+  url: "https://github.com/apple/swift-syntax/releases/download/0.50600.0-SNAPSHOT-2022-01-24/_InternalSwiftSyntaxParser.xcframework.zip",
+  checksum: "6d0a1b471cd5179f2669b46040d9e8aa92de31f7f82a9b096a2ee3e5d0c7afc1"
+)]
+let parserLibraryDependency: [Target.Dependency] = [.target(name: "_InternalSwiftSyntaxParser", condition: .when(platforms: [.macOS]))]
+
 
 let swiftSyntaxTarget: PackageDescription.Target
 
