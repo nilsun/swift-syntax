@@ -3,6 +3,13 @@
 import PackageDescription
 import Foundation
 
+let parserLibraryTarget: [Target] = [.binaryTarget(
+  name: "_InternalSwiftSyntaxParser",
+  url: "https://github.com/apple/swift-syntax/releases/download/0.50600.0-SNAPSHOT-2022-01-24/_InternalSwiftSyntaxParser.xcframework.zip",
+  checksum: "6d0a1b471cd5179f2669b46040d9e8aa92de31f7f82a9b096a2ee3e5d0c7afc1"
+)]
+let parserLibraryDependency: [Target.Dependency] = [.target(name: "_InternalSwiftSyntaxParser", condition: .when(platforms: [.macOS]))]
+
 let package = Package(
   name: "SwiftSyntax",
   targets: [
@@ -13,16 +20,8 @@ let package = Package(
     .target(name: "lit-test-helper", dependencies: ["SwiftSyntax"]),
     .testTarget(name: "PerformanceTest", dependencies: ["SwiftSyntax"])
     // Also see targets added below
-  ]
+  ]  + parserLibraryTarget
 )
-
-let parserLibraryTarget: [Target] = [.binaryTarget(
-  name: "_InternalSwiftSyntaxParser",
-  url: "https://github.com/apple/swift-syntax/releases/download/0.50600.0-SNAPSHOT-2022-01-24/_InternalSwiftSyntaxParser.xcframework.zip",
-  checksum: "6d0a1b471cd5179f2669b46040d9e8aa92de31f7f82a9b096a2ee3e5d0c7afc1"
-)]
-let parserLibraryDependency: [Target.Dependency] = [.target(name: "_InternalSwiftSyntaxParser", condition: .when(platforms: [.macOS]))]
-
 
 let swiftSyntaxTarget: PackageDescription.Target
 
@@ -40,11 +39,11 @@ if ProcessInfo.processInfo.environment["SWIFT_BUILD_SCRIPT_ENVIRONMENT"] != nil 
   // Disable it when we're in a controlled CI environment.
   swiftSyntaxUnsafeFlags += ["-enforce-exclusivity=unchecked"]
 
-  swiftSyntaxTarget = .target(name: "SwiftSyntax", dependencies: ["_CSwiftSyntax"],
+  swiftSyntaxTarget = .target(name: "SwiftSyntax", dependencies: ["_CSwiftSyntax"] + parserLibraryDependency,
                               swiftSettings: [.unsafeFlags(swiftSyntaxUnsafeFlags)]
   )
 } else {
-  swiftSyntaxTarget = .target(name: "SwiftSyntax", dependencies: ["_CSwiftSyntax"])
+  swiftSyntaxTarget = .target(name: "SwiftSyntax", dependencies: ["_CSwiftSyntax"] + parserLibraryDependency)
 }
 
 package.targets.append(swiftSyntaxTarget)
