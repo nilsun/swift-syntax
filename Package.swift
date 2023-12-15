@@ -13,7 +13,7 @@ let parserLibraryDependency: [Target.Dependency] = [.target(name: "_InternalSwif
 let package = Package(
   name: "SwiftSyntax",
   targets: [
-    .target(name: "_CSwiftSyntax"),
+    .target(name: "_CSwiftSyntax", dependencies: parserLibraryDependency),
     .testTarget(name: "SwiftSyntaxTest", dependencies: ["SwiftSyntax"], exclude: ["Inputs"]),
     .target(name: "SwiftSyntaxBuilder", dependencies: ["SwiftSyntax"]),
     .testTarget(name: "SwiftSyntaxBuilderTest", dependencies: ["SwiftSyntaxBuilder"]),
