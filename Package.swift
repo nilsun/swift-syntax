@@ -14,11 +14,11 @@ let package = Package(
   name: "SwiftSyntax",
   targets: [
     .target(name: "_CSwiftSyntax", dependencies: parserLibraryDependency),
-    .testTarget(name: "SwiftSyntaxTest", dependencies: ["SwiftSyntax"], exclude: ["Inputs"]),
-    .target(name: "SwiftSyntaxBuilder", dependencies: ["SwiftSyntax"]),
-    .testTarget(name: "SwiftSyntaxBuilderTest", dependencies: ["SwiftSyntaxBuilder"]),
-    .target(name: "lit-test-helper", dependencies: ["SwiftSyntax"]),
-    .testTarget(name: "PerformanceTest", dependencies: ["SwiftSyntax"])
+    .testTarget(name: "SwiftSyntaxTest", dependencies: ["SwiftSyntax"] + parserLibraryDependency, exclude: ["Inputs"]),
+    .target(name: "SwiftSyntaxBuilder", dependencies: ["SwiftSyntax"] + parserLibraryDependency),
+    .testTarget(name: "SwiftSyntaxBuilderTest", dependencies: ["SwiftSyntaxBuilder"] + parserLibraryDependency),
+    .target(name: "lit-test-helper", dependencies: ["SwiftSyntax"]) + parserLibraryDependency,
+    .testTarget(name: "PerformanceTest", dependencies: ["SwiftSyntax"] + parserLibraryDependency)
     // Also see targets added below
   ]  + parserLibraryTarget
 )
